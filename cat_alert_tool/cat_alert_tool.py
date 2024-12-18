@@ -95,6 +95,8 @@ def main() -> None:
         ),
     )
 
+    logger.info("Exiting script...")
+
 
 if __name__ == "__main__":
     main()

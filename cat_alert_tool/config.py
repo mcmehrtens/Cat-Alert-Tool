@@ -6,10 +6,27 @@ import yaml
 from pydantic import BaseModel, Field
 
 
+class Requests(BaseModel):
+    """Request configuration schema."""
+
+    base_url: str = Field(description="Base URL of the adoption site.")
+    tracking_url: str = Field(description="The URL to query for new cats.")
+    fetch_timeout: float = Field(
+        description="The number of seconds to wait for a response."
+    )
+    fetch_attempts: int = Field(
+        description="The number of times to attempt to fetch new cats."
+    )
+    fetch_sleep: float = Field(
+        description="The number of seconds to wait after a failed fetch "
+        "attempt."
+    )
+
+
 class ConfigSchema(BaseModel):
     """Top-level configuration schema."""
 
-    tracking_url: str = Field(description="The URL to query for new cats.")
+    requests: Requests
 
 
 class Config:
