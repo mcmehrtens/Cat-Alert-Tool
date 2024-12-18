@@ -1,12 +1,62 @@
 [tool.poetry]
+package-mode = false
 name = "cat-alert-tool"
 version = "0.1.0"
-description = ""
+description = "A Python-based web scraper that notifies the user when a new cat has been added to the Ames, IA animal shelter."
+license = "MIT"
 authors = ["Matthew Mehrtens <12023414+mcmehrtens@users.noreply.github.com>"]
 readme = "README.md"
+repository = "https://github.com/mcmehrtens/Cat-Alert-Tool"
+keywords = [
+    "cats",
+    "adoption",
+    "notification",
+    "scraper",
+]
 
 [tool.poetry.dependencies]
 python = "^3.13"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.0.1"
+
+
+[tool.ruff]
+target-version = "py313"
+exclude = [
+    ".gitignore",
+    ".pre-commit-config.yaml",
+    ".python-version",
+    "LICENSE",
+    "poetry.lock",
+    "pyproject.toml",
+    "README.md",
+]
+line-length = 79
+
+
+[tool.ruff.lint]
+select = [
+    "ALL",
+]
+ignore = [
+    "COM812",
+    "ISC001",
+]
+
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 72
+
+
+[tool.ruff.format]
+docstring-code-format = true
+preview = true
 
 
 [build-system]
