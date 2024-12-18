@@ -24,6 +24,10 @@ pydantic = "^2.10.3"
 pre-commit = "^4.0.1"
 
 
+[tool.poetry.scripts]
+cat-alert-tool = "cat_alert_tool.cat_alert_tool:main"
+
+
 [tool.ruff]
 target-version = "py313"
 exclude = [
