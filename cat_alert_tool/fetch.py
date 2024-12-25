@@ -69,9 +69,10 @@ class Cat:
             String representation of the cat.
 
         """
+        gender = "N/A" if self.gender is None else self.gender.name
         return (
             f"name: {self.name}\n"
-            f"gender: {self.gender.name}\n"
+            f"gender: {gender}\n"
             f"color: {self.color}\n"
             f"breed: {self.breed}\n"
             f"age: {self.get_human_readable_age()}\n"
@@ -99,7 +100,7 @@ class Cat:
         weeks = days // DAYS_PER_WEEK
         days %= DAYS_PER_WEEK
 
-        parts = []
+        parts: list[str] = []
         if years > 0:
             parts.append(f"{years} year{'s' if years != 1 else ''}")
         if months > 0:
@@ -214,7 +215,7 @@ def parse_cat_div(base_url: str, cat_div: bs4.element.Tag) -> Cat:
     """
     cat = Cat()
 
-    a_tag = cat_div.find("a", href=True)
+    a_tag = cat_div.find("a", href=True, on_duplicate_attribute="ignore")
     if a_tag:
         cat.url = base_url + a_tag["href"]
 
@@ -235,7 +236,7 @@ def parse_cat_div(base_url: str, cat_div: bs4.element.Tag) -> Cat:
     return cat
 
 
-def get_cats(config: ConfigSchema) -> tuple[Cat, ...]:
+def get_cats(config: ConfigSchema) -> list[Cat]:
     """Get all the cats from the tracking URL.
 
     Parameters
@@ -245,13 +246,14 @@ def get_cats(config: ConfigSchema) -> tuple[Cat, ...]:
 
     Returns
     -------
-    tuple[Cat]
+    list[Cat]
         The Cat objects parsed from the tracking URL.
 
     """
     logger.info("Beginning the cat fetching routine...")
-    cats = []
+    cats: list[Cat] = []
 
+    response = None
     attempts = 0
     while attempts < config.requests.fetch_attempts:
         try:
@@ -272,9 +274,9 @@ def get_cats(config: ConfigSchema) -> tuple[Cat, ...]:
         time.sleep(config.requests.fetch_sleep)
         attempts += 1
 
-    if attempts == config.requests.fetch_attempts:
+    if response is None or attempts == config.requests.fetch_attempts:
         logging.critical("Could not fetch cats from tracking URL.")
-        return None
+        return []
 
     strainer = SoupStrainer("div", class_="gridResult")
     soup = BeautifulSoup(response.text, "html.parser", parse_only=strainer)
