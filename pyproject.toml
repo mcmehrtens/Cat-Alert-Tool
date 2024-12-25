@@ -30,12 +30,30 @@ pre-commit = "^4.0.1"
 cat-alert-tool = "cat_alert_tool.cat_alert_tool:main"
 
 
+[tool.pyright]
+exclude = [
+    "config",
+    ".gitignore",
+    ".pre-commit-config.yaml",
+    ".pyright-override.toml",
+    ".python-version",
+    "LICENSE",
+    "poetry.lock",
+    "pyproject.toml",
+    "README.md",
+]
+extends = ".pyright-override.toml"
+pythonVersion = "3.13"
+typeCheckingMode = "strict"
+
+
 [tool.ruff]
 target-version = "py313"
 exclude = [
     "config",
     ".gitignore",
     ".pre-commit-config.yaml",
+    ".pyright-override.toml",
     ".python-version",
     "LICENSE",
     "poetry.lock",

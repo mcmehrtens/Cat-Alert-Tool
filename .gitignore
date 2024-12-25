@@ -163,3 +163,7 @@ cython_debug/
 
 # macOS
 .DS_Store
+
+# ignore pyright-override file
+.pyright-override.toml
+
