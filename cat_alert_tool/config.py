@@ -23,10 +23,18 @@ class Requests(BaseModel):
     )
 
 
+class DB(BaseModel):
+    """Database configuration schema."""
+
+    db_dir: str = Field(description="Path to the database directory.")
+    db_name: str = Field(description="Database name.")
+
+
 class ConfigSchema(BaseModel):
     """Top-level configuration schema."""
 
     requests: Requests
+    db: DB
 
 
 class Config:

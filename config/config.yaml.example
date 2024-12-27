@@ -5,4 +5,7 @@ requests:
   fetch_timeout: 10  # [s]
   fetch_attempts: 5
   fetch_sleep: 5  # [s]
+db:
+  db_dir: ./db
+  db_name: cats.db
 ...

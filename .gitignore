@@ -167,3 +167,6 @@ cython_debug/
 # ignore pyright-override file
 .pyright-override.toml
 
+# ignore the default database folder
+db
+
