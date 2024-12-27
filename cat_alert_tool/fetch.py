@@ -5,9 +5,8 @@ import re
 import time
 from enum import Enum
 
-import bs4
 import requests
-from bs4 import BeautifulSoup, SoupStrainer
+from selectolax.lexbor import LexborHTMLParser, LexborNode
 
 from cat_alert_tool.config import ConfigSchema
 from cat_alert_tool.constants import (
@@ -22,8 +21,20 @@ logger = logging.getLogger(__name__)
 class Gender(Enum):
     """Possible cat genders."""
 
-    male = "male"
-    female = "female"
+    MALE = "male"
+    FEMALE = "female"
+
+
+class TextFields(Enum):
+    """Ordering of text fields in the animal div."""
+
+    ANIMAL_TYPE = 0
+    NAME_ID = 1
+    GENDER = 2
+    COLOR = 3
+    BREED = 4
+    AGE = 5
+    LOCATION = 6
 
 
 class Cat:
@@ -69,7 +80,7 @@ class Cat:
             String representation of the cat.
 
         """
-        gender = "N/A" if self.gender is None else self.gender.name
+        gender = "N/A" if self.gender is None else self.gender.name.lower()
         return (
             f"name: {self.name}\n"
             f"gender: {gender}\n"
@@ -197,7 +208,7 @@ def parse_cat_age_string(cat_age_string: str) -> int:
     return age
 
 
-def parse_cat_div(base_url: str, cat_div: bs4.element.Tag) -> Cat:
+def parse_cat_div(base_url: str, cat_div: LexborNode) -> Cat:
     """Parse a single cat div.
 
     Parameters
@@ -215,23 +226,31 @@ def parse_cat_div(base_url: str, cat_div: bs4.element.Tag) -> Cat:
     """
     cat = Cat()
 
-    a_tag = cat_div.find("a", href=True, on_duplicate_attribute="ignore")
-    if a_tag:
-        cat.url = base_url + a_tag["href"]
+    a_node = cat_div.css_first("a")
+    if a_node:
+        href = a_node.attributes["href"]
+        if href:
+            cat.url = base_url + href
 
-    img_tag = cat_div.find("img", src=True)
-    if img_tag:
-        cat.image = base_url + img_tag["src"]
+    img_node = cat_div.css_first("img")
+    if img_node:
+        src = img_node.attributes["src"]
+        if src:
+            cat.image = base_url + src
 
-    text_fields = cat_div.find_all("div", class_="gridText")
-    if text_fields:
+    text_nodes = cat_div.css("div.gridText")
+    if text_nodes:
         cat.name, cat.id = parse_name_id_string(
-            text_fields[1].get_text(strip=True)
+            text_nodes[TextFields.NAME_ID.value].text(strip=True)
         )
-        cat.gender = parse_gender_string(text_fields[2].get_text(strip=True))
-        cat.color = text_fields[3].get_text(strip=True).lower()
-        cat.breed = text_fields[4].get_text(strip=True).lower()
-        cat.age = parse_cat_age_string(text_fields[5].get_text(strip=True))
+        cat.gender = parse_gender_string(
+            text_nodes[TextFields.GENDER.value].text(strip=True)
+        )
+        cat.color = text_nodes[TextFields.COLOR.value].text(strip=True).lower()
+        cat.breed = text_nodes[TextFields.BREED.value].text(strip=True).lower()
+        cat.age = parse_cat_age_string(
+            text_nodes[TextFields.AGE.value].text(strip=True)
+        )
 
     return cat
 
@@ -278,9 +297,8 @@ def get_cats(config: ConfigSchema) -> list[Cat]:
         logging.critical("Could not fetch cats from tracking URL.")
         return []
 
-    strainer = SoupStrainer("div", class_="gridResult")
-    soup = BeautifulSoup(response.text, "html.parser", parse_only=strainer)
-    for div in soup.find_all("div", class_="gridResult"):
+    selector = "div.gridResult"
+    for div in LexborHTMLParser(response.text).css(selector):
         cat = parse_cat_div(config.requests.base_url, div)
         logger.debug("Cat parsed:\n%s\n", cat)
         cats.append(cat)

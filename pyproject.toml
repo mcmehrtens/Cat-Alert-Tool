@@ -1,5 +1,4 @@
 [tool.poetry]
-package-mode = false
 name = "cat-alert-tool"
 version = "0.1.0"
 description = "A Python-based web scraper that notifies the user when a new cat has been added to the Ames, IA animal shelter."
@@ -20,6 +19,7 @@ pyyaml = "^6.0.2"
 pydantic = "^2.10.3"
 requests = "^2.32.3"
 beautifulsoup4 = "^4.12.3"
+selectolax = "^0.3.27"
 
 
 [tool.poetry.group.dev.dependencies]

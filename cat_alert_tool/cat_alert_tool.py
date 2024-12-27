@@ -94,7 +94,6 @@ def main() -> None:
             config.model_dump(warnings="error"), default_flow_style=False
         ),
     )
-
     logger.info("Exiting script...")
 
 
