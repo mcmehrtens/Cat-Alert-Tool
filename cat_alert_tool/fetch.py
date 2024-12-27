@@ -82,6 +82,7 @@ class Cat:
         """
         gender = "N/A" if self.gender is None else self.gender.name.lower()
         return (
+            f"id: {self.id.upper()}\n"
             f"name: {self.name}\n"
             f"gender: {gender}\n"
             f"color: {self.color}\n"

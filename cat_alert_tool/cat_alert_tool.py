@@ -6,6 +6,8 @@ import logging
 import yaml
 
 from cat_alert_tool.config import Config
+from cat_alert_tool.db import CatDB
+from cat_alert_tool.fetch import get_cats
 
 cat_str = (
     "  /$$$$$$   /$$$$$$  /$$$$$$$$\n"
@@ -94,6 +96,8 @@ def main() -> None:
             config.model_dump(warnings="error"), default_flow_style=False
         ),
     )
+    cats = get_cats(config)
+    db = CatDB(config)
     logger.info("Exiting script...")
 
 
