@@ -19,10 +19,14 @@ pyyaml = "^6.0.2"
 pydantic = "^2.10.3"
 requests = "^2.32.3"
 selectolax = "^0.3.27"
+pypubsub = "^4.0.3"
 
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.0.1"
+pytest = "^8.3.4"
+pytest-mock = "^3.14.0"
+pytest-cov = "^6.0.0"
 
 
 [tool.poetry.scripts]
@@ -44,6 +48,7 @@ exclude = [
 extends = ".pyright-override.toml"
 pythonVersion = "3.13"
 typeCheckingMode = "strict"
+stubPath = "typings"
 
 
 [tool.ruff]

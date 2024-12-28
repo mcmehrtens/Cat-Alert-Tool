@@ -48,7 +48,7 @@ class Cat:
         A link to a picture of the cat.
     name
         The name of the cat.
-    id_
+    id
         The ID of the cat.
     gender
         The gender of the cat.
