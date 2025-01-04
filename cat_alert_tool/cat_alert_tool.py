@@ -97,7 +97,8 @@ def main() -> None:
         ),
     )
     cats = get_cats(config)
-    db = CatDB(config)
+    db = CatDB(config.db.db_dir, config.db.db_name)
+    db.process_cats(cats)
     logger.info("Exiting script...")
 
 
