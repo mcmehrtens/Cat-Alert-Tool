@@ -20,6 +20,7 @@ pydantic = "^2.10.3"
 requests = "^2.32.3"
 selectolax = "^0.3.27"
 pypubsub = "^4.0.3"
+sqlalchemy = "^2.0.36"
 
 
 [tool.poetry.group.dev.dependencies]
